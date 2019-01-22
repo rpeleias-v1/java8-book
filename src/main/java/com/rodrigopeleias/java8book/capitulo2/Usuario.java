@@ -1,10 +1,12 @@
 package com.rodrigopeleias.java8book.capitulo2;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Usuario {
 
     private String nome;
