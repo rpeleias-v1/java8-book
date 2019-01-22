@@ -34,7 +34,7 @@ public class Capitulo7 {
                 .mapToInt(Usuario::getPontos)
                 .average()
                 .orElse(0.0);
-        System.out.println(averageValue)
+        System.out.println(averageValue);
 
         double averageValueWithException = usuarios.stream()
                 .mapToInt(Usuario::getPontos)
