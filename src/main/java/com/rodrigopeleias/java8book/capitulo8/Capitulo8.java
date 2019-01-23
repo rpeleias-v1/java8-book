@@ -9,7 +9,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.function.IntSupplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Capitulo8 {
 
@@ -20,16 +23,18 @@ public class Capitulo8 {
 
         List<Usuario> usuarios = Arrays.asList(rodrigo, denise, pandora);
 
+        usuarios.sort(Comparator.comparing(Usuario::getNome));
+
         Optional<Usuario> first = usuarios.stream()
-                .filter(u -> u.getPontos() > 50)
-                .peek(System.out::println)
-                .findFirst();
+                .filter(u -> u.getPontos() > 10)
+                .sorted(Comparator.comparing(Usuario::getNome))
+                .peek(System.out::println).findFirst();
 
         if (first.isPresent()) {
             System.out.println(first.get());
         }
 
-        usuarios.stream()
+        Optional<Usuario> optAnyUser = usuarios.stream()
                 .sorted(Comparator.comparing(Usuario::getNome))
                 .peek(System.out::println)
                 .findAny();
@@ -60,8 +65,11 @@ public class Capitulo8 {
         System.out.println(matched);
 
         // operações de curto circuito
-        List<Integer> pontos = usuarios.stream()
-                .mapToInt(Usuario::getPontos)
+        Random random = new Random(0);
+        IntStream stream = IntStream.generate(() -> random.nextInt());
+
+
+        List<Integer> pontos = stream
                 .limit(100)
                 .boxed().collect(Collectors.toList());
         pontos.forEach(System.out::println);
@@ -70,5 +78,30 @@ public class Capitulo8 {
         Files.list(Paths.get("."))
                 .filter(p -> p.toString().endsWith(".java"))
                 .forEach(System.out::println);
+
+        // Fibonacci com supplier
+        IntStream.generate(new Fibonacci())
+                .limit(10)
+                .forEach(System.out::println);
+
+        int maiorQue100 = IntStream.generate(new Fibonacci())
+                .filter(f -> f > 100)
+                .findFirst()
+                .getAsInt();
+
+        System.out.println(maiorQue100);
+    }
+}
+
+class Fibonacci implements IntSupplier {
+
+    private int anterior = 0;
+    private int proximo = 1;
+
+    @Override
+    public int getAsInt() {
+        proximo = proximo + anterior;
+        anterior = proximo - anterior;
+        return anterior;
     }
 }
